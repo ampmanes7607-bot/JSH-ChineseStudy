@@ -673,10 +673,7 @@ function Field({ label, children }) {
 /* ─── Focus Modal (더블탭) ─── */
 function FocusModal({ words, startIdx, onClose, onMarkLevel }) {
   const [idx, setIdx] = useState(startIdx);
-  const [flipped, setFlipped] = useState(false);
   const [mode, setMode] = useState("both");
-
-  useEffect(()=>{ setFlipped(false); }, [idx, mode]);
 
   const word = words[idx];
   const lv = word?.level ?? 0;
@@ -783,14 +780,13 @@ function FocusModal({ words, startIdx, onClose, onMarkLevel }) {
 function TodayView({ todayWords, unknownLeft, onMarkLevel, onRefill }) {
   const [idx, setIdx] = useState(0);
   const [mode, setMode] = useState("both");
-  const [flipped, setFlipped] = useState(false);
   const [focusIdx, setFocusIdx] = useState(null);
   const tapTimer = useRef(null);
   const allDone = todayWords.length > 0 && todayWords.every(w => (w.level??0) > 0);
 
-  useEffect(()=>{ setFlipped(false); }, [idx, mode]);
   useEffect(()=>{
     if (idx >= todayWords.length && todayWords.length > 0) setIdx(todayWords.length-1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todayWords.length]);
 
   if (todayWords.length === 0) return (
@@ -830,7 +826,6 @@ function TodayView({ todayWords, unknownLeft, onMarkLevel, onRefill }) {
     } else {
       tapTimer.current = setTimeout(()=>{
         tapTimer.current = null;
-        if (mode === "both") setFlipped(f=>!f); // 싱글탭
       }, 280);
     }
   }
